@@ -1,0 +1,19 @@
+---
+axe_swapfile_size: 1G
+axe_vm_swappiness: 1
+axe_common_packages:
+  - apt-show-versions
+  - apt-transport-https
+  - curl
+  - git-core
+  - haveged
+  - htop
+  - ntp
+  - ntpdate
+  - python-pip
+  - rsync
+  - screen
+  - sudo
+  - tmux
+  - tree
+  - vim
