@@ -3,7 +3,7 @@
   become: yes
   get_url:
     # TODO: Move to AXErunners/axe/master/contrib/gitian-downloader/
-    url: "https://raw.githubusercontent.com/kentsommer/axe/master/contrib/gitian-downloader/{{ item.name }}.asc"
+    url: "https://raw.githubusercontent.com/AXErunners/gitian.sigs/master/{{ item.name }}.asc"
     dest: "/tmp/{{ item.id }}.asc"
     owner: "{{ gitian_user }}"
     group: "{{ gitian_user }}"
