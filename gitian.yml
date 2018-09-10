@@ -1,0 +1,21 @@
+---
+- name: Apply the Axe Gitian builder role.
+  become: yes
+  hosts: localhost:axe-build
+  vars:
+    #axe_git_repo_url: https://github.com/AXErunners/axe
+    axe_git_repo_url: https://github.com/leto/axe
+    axe_version: v1.0.12-dev
+    gpg_key_name: '8DFCBF8E5A4D8019'
+    #gpg_key_name: 'F16219F4C23F91112E9C734A8DFCBF8E5A4D8019'
+    git_name: 'Duke Leto'
+    git_email: 'duke@leto.net'
+    # optional - auto imports private key necessary for signing
+    gpg_key_id: '8DFCBF8E5A4D8019'
+    # optional
+    ssh_key_name: ''
+  roles:
+    - role: common
+      tags: common
+    - role: gitian
+      tags: gitian

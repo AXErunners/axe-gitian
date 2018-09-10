@@ -1,0 +1,26 @@
+---
+- name: Download Axe developer public keys from website.
+  become: yes
+  get_url:
+    # TODO: Move to AXErunners/axe/master/contrib/gitian-downloader/
+    url: "https://raw.githubusercontent.com/kentsommer/axe/master/contrib/gitian-downloader/{{ item.name }}.asc"
+    dest: "/tmp/{{ item.id }}.asc"
+    owner: "{{ gitian_user }}"
+    group: "{{ gitian_user }}"
+    mode: "0644"
+  with_items: "{{ axe_developer_pubkeys }}"
+
+- name: Import Axe developer public keys.
+  command: "gpg --import /tmp/{{ item.id }}.asc"
+  become_user: "{{ gitian_user }}"
+  with_items: "{{ axe_developer_pubkeys }}"
+
+- name: Set Axe developer public keys to ultimately trusted.
+  shell: >
+    gpg --list-keys --with-colons --with-fingerprint `gpg --list-keys
+    --with-colons | grep "pub:f:.*:-:" |
+    sed -r -e 's/pub:f:[0-9]+:[0-9]+:([A-F0-9]+):.*/0x\1/'` | grep "^fpr:" |
+    sed -r -e 's/fpr:::::::::([0-9A-F]+):/\1:6:/' | gpg --import-ownertrust
+  become_user: "{{ gitian_user }}"
+  args:
+    executable: /bin/bash

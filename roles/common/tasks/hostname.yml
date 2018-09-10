@@ -1,0 +1,11 @@
+---
+- name: Set hostname.
+  hostname:
+    name: "axe-build"
+
+- name: Build /etc/hosts file.
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127.0.1.1'
+    line: "127.0.1.1	axe-build"
+    state: present
