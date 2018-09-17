@@ -1,5 +1,5 @@
 ---
-- name: Apply the Axe Gitian builder role.
+- name: Apply the AXE Gitian builder role.
   become: yes
   hosts: localhost:axe-build
   vars:
