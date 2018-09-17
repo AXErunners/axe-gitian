@@ -1,9 +1,9 @@
-Axe deterministic builds
+AXE deterministic builds
 ==========================
 
-This is a deterministic build environment for [Axe](https://github.com/AXErunners/axe-gitian) that uses [Gitian](https://gitian.org/).
+This is a deterministic build environment for [AXE](https://github.com/AXErunners/axe-gitian) that uses [Gitian](https://gitian.org/).
 
-Gitian provides a way to be reasonably certain that the Axe executables are really built from the exact source on GitHub and have not been tampered with. It also makes sure that the same, tested dependencies are used and statically built into the executable.
+Gitian provides a way to be reasonably certain that the AXE executables are really built from the exact source on GitHub and have not been tampered with. It also makes sure that the same, tested dependencies are used and statically built into the executable.
 
 Multiple developers build from source code by following a specific descriptor ("recipe"), cryptographically sign the result, and upload the resulting signature. These results are compared and only if they match is the build is accepted.
 
@@ -40,7 +40,7 @@ How to get started
 ### Edit settings in gitian.yml
 
 ```yaml
-# URL of repository containing Axe source code.
+# URL of repository containing AXE source code.
 axe_git_repo_url: 'https://github.com/AXErunners/axe'
 
 # Specific tag or branch you want to build.
@@ -61,7 +61,7 @@ This will provision a Gitian host virtual machine that uses a Linux container (L
 
 Use `git stash` to save one's local customizations to `gitian.yml`.
 
-Building Axe
+Building AXE
 --------------
 
     vagrant ssh axe-build
@@ -78,7 +78,7 @@ Generating and uploading signatures
 
 After the build successfully completes, `gsign` will be called. Commit and push your signatures (both the .assert and .assert.sig files) to the [AXErunners/gitian.sigs](https://github.com/AXErunners/gitian.sigs) repository, or if that's not possible then create a pull request.
 
-Signatures can be verified by running `gitian-build.sh --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports Axe developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the Axe source repository.
+Signatures can be verified by running `gitian-build.sh --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports AXE developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the AXE source repository.
 
 Working with GPG and SSH
 --------------------------
