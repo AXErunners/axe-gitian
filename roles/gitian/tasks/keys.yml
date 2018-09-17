@@ -1,5 +1,5 @@
 ---
-- name: Download Axe developer public keys from website.
+- name: Download AXE developer public keys from website.
   become: yes
   get_url:
     # TODO: Move to AXErunners/axe/master/contrib/gitian-downloader/
@@ -10,12 +10,12 @@
     mode: "0644"
   with_items: "{{ axe_developer_pubkeys }}"
 
-- name: Import Axe developer public keys.
+- name: Import AXE developer public keys.
   command: "gpg --import /tmp/{{ item.id }}.asc"
   become_user: "{{ gitian_user }}"
   with_items: "{{ axe_developer_pubkeys }}"
 
-- name: Set Axe developer public keys to ultimately trusted.
+- name: Set AXE developer public keys to ultimately trusted.
   shell: >
     gpg --list-keys --with-colons --with-fingerprint `gpg --list-keys
     --with-colons | grep "pub:f:.*:-:" |

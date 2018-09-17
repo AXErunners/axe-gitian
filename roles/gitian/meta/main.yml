@@ -1,8 +1,8 @@
 ---
 galaxy_info:
   author: Kevin Gallagher (@ageis) and Kent Sommer (@kentsommer)
-  description: Sets up a deterministic Gitian builder VM for Axe.
-  company: Axe
+  description: Sets up a deterministic Gitian builder VM for AXE.
+  company: AXE
   galaxy_tags: []
   license: GPLv2
   min_ansible_version: 2.1.2

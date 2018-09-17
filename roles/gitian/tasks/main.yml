@@ -132,7 +132,7 @@
 - include: keys.yml
   tags: keys
 
-- name: Clone git repository for Axe.
+- name: Clone git repository for AXE.
   git:
     repo: "{{ axe_git_repo_url }}"
     dest: "/home/{{ gitian_user }}/axe"
