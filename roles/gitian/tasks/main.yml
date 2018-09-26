@@ -117,7 +117,7 @@
   apt:
     name: lxc
     state: latest
-    default_release: jessie-backports
+    default_release: buster
     update_cache: yes
     cache_valid_time: 3600
 
@@ -191,11 +191,11 @@
 
 - name: Check for presence of Gitian LXC image.
   stat:
-    path: "/home/{{ gitian_user }}/gitian-builder/base-jessie-amd64"
+    path: "/home/{{ gitian_user }}/gitian-builder/base-buster-amd64"
   register: gitian_lxc_image
 
 - name: Set up the Gitian LXC image.
-  shell: "source ~/.profile && /home/{{ gitian_user }}/gitian-builder/bin/make-base-vm --lxc --arch amd64 --distro debian --suite jessie"
+  shell: "source ~/.profile && /home/{{ gitian_user }}/gitian-builder/bin/make-base-vm --lxc --arch amd64 --distro debian --suite buster"
   when: gitian_lxc_image.stat.exists == false
   become: yes
   become_user: "{{ gitian_user }}"

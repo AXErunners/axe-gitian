@@ -4,7 +4,7 @@ Vagrant.configure(2) do |config|
 
   config.ssh.forward_agent = true
   config.vm.define 'axe-build', autostart: false do |gitian|
-    gitian.vm.box = "debian/jessie64"
+    gitian.vm.box = "fujimakishouten/debian-buster64"
     gitian.vm.network "forwarded_port", guest: 22, host: 2200, auto_correct: true
     gitian.vm.provision "ansible" do |ansible|
       ansible.playbook = "gitian.yml"
