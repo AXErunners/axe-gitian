@@ -5,7 +5,7 @@ axe_common_packages:
   - apt-show-versions
   - apt-transport-https
   - curl
-  - git-core
+  - git
   - haveged
   - htop
   - ntp

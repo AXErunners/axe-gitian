@@ -20,7 +20,7 @@
     - bridge-utils
     - curl
     - debootstrap
-    - git-core
+    - git
     - gnupg2
     - kpartx
     - lintian
