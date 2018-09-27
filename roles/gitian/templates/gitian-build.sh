@@ -5,19 +5,25 @@
 # What to do
 sign=false
 verify=false
-build=true
+build=false
+setupenv=false
 
 # Systems to build
 linux=true
+windows=true
+osx=true
 
 # Other Basic variables
-SIGNER="{{ gpg_key_name }}"
-VERSION={{ axe_version }}
+SIGNER=
+VERSION=
 commit=false
-url={{ axe_git_repo_url }}
+url=https://github.com/axerunners/axe
 proc=2
-mem=3584
+mem=2000
 lxc=true
+docker=false
+osslTarUrl=http://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz
+osslPatchUrl=https://bitcoincore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
 scriptName=$(basename -- "$0")
 signProg="gpg --detach-sign"
 commitFiles=true
@@ -26,7 +32,7 @@ commitFiles=true
 read -d '' usage <<- EOF
 Usage: $scriptName [-c|u|v|b|s|B|o|h|j|m|] signer version
 
-Run this script from the directory containing the axe, gitian-builder, and gitian.sigs repositories.
+Run this script from the directory containing the axe, gitian-builder, gitian.sigs, and axe-detached-sigs.
 
 Arguments:
 signer          GPG signer to sign each build assert file
@@ -34,13 +40,18 @@ version		Version number, commit, or branch to build. If building a commit or bra
 
 Options:
 -c|--commit	Indicate that the version argument is for a commit or branch
--u|--url	Specify the URL of the repository. Default is {{ axe_git_repo_url }}
+-u|--url	Specify the URL of the repository. Default is https://github.com/axerunners/axe
 -v|--verify 	Verify the gitian build
 -b|--build	Do a gitian build
--s|--sign	Make signed binaries
+-s|--sign	Make signed binaries for Windows and Mac OSX
 -B|--buildsign	Build both signed and unsigned binaries
+-o|--os		Specify which Operating Systems the build is for. Default is lwx. l for linux, w for windows, x for osx
 -j		Number of processes to use. Default 2
--m		Memory to allocate in MiB. Default 3584
+-m		Memory to allocate in MiB. Default 2000
+--kvm           Use KVM
+--lxc           Use LXC
+--docker        Use Docker
+--setup         Setup the gitian building environment. Uses KVM. If you want to use lxc, use the --lxc option. If you want to use Docker, use --docker. Only works on Debian-based systems (Ubuntu, Debian)
 --detach-sign   Create the assert file for detached signing. Will not commit anything.
 --no-commit     Do not commit anything to git
 -h|--help	Print this help message
@@ -70,13 +81,38 @@ while :; do
         -S|--signer)
 	    if [ -n "$2" ]
 	    then
-		SIGNER=$2
+		SIGNER="$2"
 		shift
 	    else
 		echo 'Error: "--signer" requires a non-empty argument.'
 		exit 1
 	    fi
            ;;
+        # Operating Systems
+        -o|--os)
+	    if [ -n "$2" ]
+	    then
+		linux=false
+		windows=false
+		osx=false
+		if [[ "$2" = *"l"* ]]
+		then
+		    linux=true
+		fi
+		if [[ "$2" = *"w"* ]]
+		then
+		    windows=true
+		fi
+		if [[ "$2" = *"x"* ]]
+		then
+		    osx=true
+		fi
+		shift
+	    else
+		echo 'Error: "--os" requires an argument containing an l (for linux), w (for windows), or x (for Mac OSX)\n'
+		exit 1
+	    fi
+	    ;;
 	# Help message
 	-h|--help)
 	    echo "$usage"
@@ -119,6 +155,21 @@ while :; do
 		exit 1
 	    fi
 	    ;;
+        # kvm
+        --lxc)
+            lxc=true
+            docker=false
+            ;;
+        # kvm
+        --kvm)
+            lxc=false
+            docker=false
+            ;;
+        # docker
+        --docker)
+            lxc=false
+            docker=true
+            ;;
         # Detach sign
         --detach-sign)
             signProg="true"
@@ -127,6 +178,10 @@ while :; do
         # Commit files
         --no-commit)
             commitFiles=false
+            ;;
+        # Setup
+        --setup)
+            setup=true
             ;;
 	*)               # Default case: If no more options then break out of the loop.
              break
@@ -137,7 +192,26 @@ done
 # Set up LXC
 if [[ $lxc = true ]]
 then
-    source ~/.profile
+    export USE_LXC=1
+    export LXC_BRIDGE=lxcbr0
+    sudo ifconfig lxcbr0 up 10.0.3.2
+elif [[ $docker = true ]]
+then
+    export USE_DOCKER=1
+fi
+
+# Check for OSX SDK
+if [[ ! -e "gitian-builder/inputs/MacOSX10.11.sdk.tar.gz" && $osx == true ]]
+then
+    echo "Cannot build for OSX, SDK does not exist. Will build for other OSes"
+    osx=false
+fi
+
+# Get signer
+if [[ -n"$1" ]]
+then
+    SIGNER="$1"
+    shift
 fi
 
 # Get version
@@ -149,7 +223,7 @@ then
 fi
 
 # Check that a signer is specified
-if [[ $SIGNER == "" ]]
+if [[ "$SIGNER" == "" ]]
 then
     echo "$scriptName: Missing signer."
     echo "Try $scriptName --help for more information"
@@ -167,9 +241,31 @@ fi
 # Add a "v" if no -c
 if [[ $commit = false ]]
 then
-	COMMIT="${VERSION}"
+	COMMIT="v${VERSION}"
 fi
 echo ${COMMIT}
+
+# Setup build environment
+if [[ $setup = true ]]
+then
+    sudo apt-get install ruby apache2 git apt-cacher-ng python-vm-builder qemu-kvm qemu-utils
+    git clone https://github.com/axerunners/gitian.sigs.git
+    git clone https://github.com/axerunners/axe-detached-sigs.git
+    git clone https://github.com/devrandom/gitian-builder.git
+    pushd ./gitian-builder
+    if [[ -n "$USE_LXC" ]]
+    then
+        sudo apt-get install lxc
+        bin/make-base-vm --suite trusty --arch amd64 --lxc
+    elif [[ -n "$USE_DOCKER" ]]
+    then
+        sudo apt-get install docker-ce
+        bin/make-base-vm --suite trusty --arch amd64 --docker
+    else
+        bin/make-base-vm --suite trusty --arch amd64
+    fi
+    popd
+fi
 
 # Set up build
 pushd ./axe
@@ -181,7 +277,7 @@ popd
 if [[ $build = true ]]
 then
 	# Make output folder
-	mkdir -p ./axe-binaries/${VERSION}
+	mkdir -p ./axecore-binaries/${VERSION}
 
 	# Build Dependencies
 	echo ""
@@ -189,6 +285,8 @@ then
 	echo ""
 	pushd ./gitian-builder
 	mkdir -p inputs
+	wget -N -P inputs $osslPatchUrl
+	wget -N -P inputs $osslTarUrl
 	make -C ../axe/depends download SOURCES_PATH=`pwd`/cache/common
 
 	# Linux
@@ -198,8 +296,30 @@ then
 	    echo "Compiling ${VERSION} Linux"
 	    echo ""
 	    ./bin/gbuild -j ${proc} -m ${mem} --commit axe=${COMMIT} --url axe=${url} ../axe/contrib/gitian-descriptors/gitian-linux.yml
-	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION} --destination ../gitian.sigs/ ../axe/contrib/gitian-descriptors/gitian-linux.yml
-	    mv build/out/axe-*.tar.gz build/out/src/axe-*.tar.gz ../axe-binaries/${VERSION}
+	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION}-linux --destination ../gitian.sigs/ ../axe/contrib/gitian-descriptors/gitian-linux.yml
+	    mv build/out/axecore-*.tar.gz build/out/src/axecore-*.tar.gz ../axecore-binaries/${VERSION}
+	fi
+	# Windows
+	if [[ $windows = true ]]
+	then
+	    echo ""
+	    echo "Compiling ${VERSION} Windows"
+	    echo ""
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit axe=${COMMIT} --url axe=${url} ../axe/contrib/gitian-descriptors/gitian-win.yml
+	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../axe/contrib/gitian-descriptors/gitian-win.yml
+	    mv build/out/axecore-*-win-unsigned.tar.gz inputs/axecore-win-unsigned.tar.gz
+	    mv build/out/axecore-*.zip build/out/axecore-*.exe ../axecore-binaries/${VERSION}
+	fi
+	# Mac OSX
+	if [[ $osx = true ]]
+	then
+	    echo ""
+	    echo "Compiling ${VERSION} Mac OSX"
+	    echo ""
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit axe=${COMMIT} --url axe=${url} ../axe/contrib/gitian-descriptors/gitian-osx.yml
+	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../axe/contrib/gitian-descriptors/gitian-osx.yml
+	    mv build/out/axecore-*-osx-unsigned.tar.gz inputs/axecore-osx-unsigned.tar.gz
+	    mv build/out/axecore-*.tar.gz build/out/axecore-*.dmg ../axecore-binaries/${VERSION}
 	fi
 	popd
 
@@ -207,11 +327,13 @@ then
         then
 	    # Commit to gitian.sigs repo
             echo ""
-            echo "Committing ${VERSION} Signatures"
+            echo "Committing ${VERSION} Unsigned Sigs"
             echo ""
             pushd gitian.sigs
-            git add ${VERSION}/${SIGNER}
-            git commit -a -m "Add ${VERSION} signatures for ${SIGNER}"
+            git add ${VERSION}-linux/"${SIGNER}"
+            git add ${VERSION}-win-unsigned/"${SIGNER}"
+            git add ${VERSION}-osx-unsigned/"${SIGNER}"
+            git commit -a -m "Add ${VERSION} unsigned sigs for ${SIGNER}"
             popd
         fi
 fi
@@ -222,9 +344,29 @@ then
 	# Linux
 	pushd ./gitian-builder
 	echo ""
-	echo "Verifying ${VERSION} Linux"
+	echo "Verifying v${VERSION} Linux"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION} ../axe/contrib/gitian-descriptors/gitian-linux.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../axe/contrib/gitian-descriptors/gitian-linux.yml
+	# Windows
+	echo ""
+	echo "Verifying v${VERSION} Windows"
+	echo ""
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../axe/contrib/gitian-descriptors/gitian-win.yml
+	# Mac OSX
+	echo ""
+	echo "Verifying v${VERSION} Mac OSX"
+	echo ""
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../axe/contrib/gitian-descriptors/gitian-osx.yml
+	# Signed Windows
+	echo ""
+	echo "Verifying v${VERSION} Signed Windows"
+	echo ""
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../axe/contrib/gitian-descriptors/gitian-osx-signer.yml
+	# Signed Mac OSX
+	echo ""
+	echo "Verifying v${VERSION} Signed Mac OSX"
+	echo ""
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../axe/contrib/gitian-descriptors/gitian-osx-signer.yml
 	popd
 fi
 
@@ -233,6 +375,27 @@ if [[ $sign = true ]]
 then
 
         pushd ./gitian-builder
+	# Sign Windows
+	if [[ $windows = true ]]
+	then
+	    echo ""
+	    echo "Signing ${VERSION} Windows"
+	    echo ""
+	    ./bin/gbuild -i --commit signature=${COMMIT} ../axe/contrib/gitian-descriptors/gitian-win-signer.yml
+	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../axe/contrib/gitian-descriptors/gitian-win-signer.yml
+	    mv build/out/axecore-*win64-setup.exe ../axecore-binaries/${VERSION}
+	    mv build/out/axecore-*win32-setup.exe ../axecore-binaries/${VERSION}
+	fi
+	# Sign Mac OSX
+	if [[ $osx = true ]]
+	then
+	    echo ""
+	    echo "Signing ${VERSION} Mac OSX"
+	    echo ""
+	    ./bin/gbuild -i --commit signature=${COMMIT} ../axe/contrib/gitian-descriptors/gitian-osx-signer.yml
+	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../axe/contrib/gitian-descriptors/gitian-osx-signer.yml
+	    mv build/out/axecore-osx-signed.dmg ../axecore-binaries/${VERSION}/axecore-${VERSION}-osx.dmg
+	fi
 	popd
 
         if [[ $commitFiles = true ]]
@@ -240,9 +403,11 @@ then
             # Commit Sigs
             pushd gitian.sigs
             echo ""
-            echo "Committing ${VERSION} Signed Binary Signatures"
+            echo "Committing ${VERSION} Signed Sigs"
             echo ""
-            git commit -a -m "Add ${VERSION} signed binary signatures for ${SIGNER}"
+            git add ${VERSION}-win-signed/"${SIGNER}"
+            git add ${VERSION}-osx-signed/"${SIGNER}"
+            git commit -a -m "Add ${VERSION} signed binary sigs for ${SIGNER}"
             popd
         fi
 fi
