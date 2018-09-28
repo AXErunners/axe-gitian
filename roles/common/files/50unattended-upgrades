@@ -1,6 +1,6 @@
 Unattended-Upgrade::Origins-Pattern {
-        "o=Debian,n=buster-updates";
-        "o=Debian,n=buster,l=Debian-Security";
+        "o=Ubuntu,n=bionic-updates";
+        "o=Ubuntu,n=bionic,l=Ubuntu-Security";
 };
 Unattended-Upgrade::Remove-Unused-Dependencies "true";
 Unattended-Upgrade::Automatic-Reboot "false";
