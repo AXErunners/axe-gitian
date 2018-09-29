@@ -235,3 +235,15 @@
     - curl
     - software-properties-common
     - docker-ce
+
+- name: Install KVM
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - qemu-kvm
+    - libvirt-clients
+    - libvirt-daemon-system
+    - bridge-utils
+    - virt-manager
