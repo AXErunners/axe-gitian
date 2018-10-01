@@ -235,9 +235,35 @@
     - curl
     - software-properties-common
     - docker-ce
+    - g++-mingw-w64-x86-64
+    - g++-mingw-w64-i686
 
 - name: Execute Docker without sudo
   shell: sh -c "sudo usermod -aG docker vagrant"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 64bit 1/2
+  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-g++  /usr/bin/x86_64-w64-mingw32-g++-posix"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 64bit 2/2
+  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-gcc  /usr/bin/x86_64-w64-mingw32-gcc-posix"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 32bit 1/2
+  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 32bit 2/2
+  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-g++  /usr/bin/i686-w64-mingw32-g++-posix"
   become: yes
   become_user: vagrant
   become_method: sudo
