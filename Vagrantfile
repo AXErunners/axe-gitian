@@ -4,6 +4,19 @@ Vagrant.configure(2) do |config|
 
   config.ssh.forward_agent = true
   config.vm.define 'axe-build', autostart: false do |gitian|
+    required_plugins = %w( vagrant-vbguest vagrant-disksize )
+    _retry = false
+    required_plugins.each do |plugin|
+        unless Vagrant.has_plugin? plugin
+            system "vagrant plugin install #{plugin}"
+            _retry=true
+        end
+    end
+
+    if (_retry)
+        exec "vagrant " + ARGV.join(' ')
+    end
+    gitian.disksize.size = "42GB"
     gitian.vm.box = "ubuntu/bionic64"
     gitian.vm.network "forwarded_port", guest: 22, host: 2200, auto_correct: true
     gitian.vm.provision "ansible" do |ansible|
