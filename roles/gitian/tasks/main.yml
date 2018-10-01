@@ -236,6 +236,12 @@
     - software-properties-common
     - docker-ce
 
+- name: Execute Docker without sudo
+  shell: sh -c "sudo usermod -aG docker vagrant"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
 - name: Install KVM
   apt:
     name: "{{ item }}"
