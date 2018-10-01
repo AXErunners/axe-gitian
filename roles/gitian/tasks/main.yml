@@ -248,9 +248,11 @@
     state: present
     update_cache: yes
   with_items:
+    - qemu
     - qemu-kvm
     - libvirt-clients
     - libvirt-daemon-system
+    - libvirt-bin
     - bridge-utils
     - virt-manager
 
