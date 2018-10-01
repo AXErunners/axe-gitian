@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
     gitian.vm.provider "virtualbox" do |v|
       v.name = "axe-build"
       v.memory = 4096
-      v.cpus = 2
+      v.cpus = 4
     end
 #    gitian.vm.synced_folder "~/.gnupg", "/home/vagrant/.gnupg", type: "sshfs"
 #    gitian.vm.synced_folder "./gitian.sigs", "/home/vagrant/gitian.sigs", create: true
