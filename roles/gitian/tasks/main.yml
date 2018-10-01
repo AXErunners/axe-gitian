@@ -178,8 +178,8 @@
 
 - name: Copy Gitian build script.
   template:
-    src: gitian-build.sh
-    dest: "/home/{{ gitian_user }}/gitian-build.sh"
+    src: gitian-build.py
+    dest: "/home/{{ gitian_user }}/gitian-build.py"
     owner: "{{ gitian_user }}"
     group: "{{ gitian_user }}"
     mode: "0755"
@@ -215,7 +215,7 @@
     msg: >-
       Finished bootstrapping the Gitian host VM!
       To enter the environment, run `vagrant ssh axe-build`
-      and then use `./gitian-build.sh` to kick off a build.
+      and then use `./gitian-build.py` to kick off a build.
 
 - name: Add Docker GPG key
   apt_key: url=https://download.docker.com/linux/ubuntu/gpg
