@@ -1,6 +1,6 @@
 ---
 - name: Check that the secret key exists.
-  local_action: "command gpg --list-secret-keys | grep {{ gpg_key_id }}"
+  local_action: "command gpg2 --list-secret-keys | grep {{ gpg_key_id }}"
   become: no
   ignore_errors: true
   register: gpg_list_keys_result
@@ -8,7 +8,7 @@
     GNUPGHOME: "{{ lookup('env', 'HOME') }}/.gnupg"
 
 - name: Export the GPG private key from the local keyring.
-  local_action: "command gpg --armor --export-secret-key {{ gpg_key_id }}"
+  local_action: "command gpg2 --armor --export-secret-key {{ gpg_key_id }}"
   become: no
   register: gpg_private_key
   changed_when: false
