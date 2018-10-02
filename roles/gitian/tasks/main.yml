@@ -135,20 +135,6 @@
     - curl
     - software-properties-common
     - docker-ce
-    - g++-mingw-w64-x86-64
-    - g++-mingw-w64-i686
-    - g++-arm-linux-gnueabihf
-    - nsis
-    - wine-stable
-    - wine64
-    - bc
-    - cmake
-    - imagemagick
-    - libcap-dev
-    - librsvg2-bin
-    - libz-dev
-    - libbz2-dev
-    - libtiff-tools
 
 - name: Execute Docker without sudo
   shell: sh -c "sudo usermod -aG docker vagrant"
