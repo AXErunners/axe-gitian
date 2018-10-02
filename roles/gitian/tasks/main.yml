@@ -21,7 +21,7 @@
     - curl
     - debootstrap
     - git
-    - gnupg
+    - gnupg2
     - kpartx
     - lintian
     - make
@@ -166,7 +166,7 @@
 
 - name: Wait extra time for VM to come back up.
   pause:
-    seconds: 10
+    seconds: 13
 
 - name: Set Git username.
   command: "git config --global user.name '{{ git_name }}'"
@@ -190,33 +190,6 @@
     path: "/home/{{ gitian_user }}/gitian-builder/base-bionic-amd64"
   register: gitian_lxc_image
 
-- name: Set up the Gitian LXC image.
-  shell: "source ~/.profile && /home/{{ gitian_user }}/gitian-builder/bin/make-base-vm --lxc --arch amd64 --distro ubuntu --suite bionic"
-  when: gitian_lxc_image.stat.exists == false
-  become: yes
-  become_user: "{{ gitian_user }}"
-  args:
-    chdir: "/home/{{ gitian_user }}/gitian-builder"
-    executable: /bin/bash
-
-- name: Clean the apt cache to free up space.
-  command: apt-get autoclean
-  register: autoclean_result
-  changed_when: "'Del' in autoclean_result.stdout"
-
-
-- include: ssh.yml
-  tags: ssh
-  become: no
-  when: ssh_key_name is defined and ssh_key_name != ''
-
-- name: Display help message.
-  debug:
-    msg: >-
-      Finished bootstrapping the Gitian host VM!
-      To enter the environment, run `vagrant ssh axe-build`
-      and then use `./gitian-build.py` to kick off a build.
-
 - name: Add Docker GPG key
   apt_key: url=https://download.docker.com/linux/ubuntu/gpg
 
@@ -235,35 +208,9 @@
     - curl
     - software-properties-common
     - docker-ce
-    - g++-mingw-w64-x86-64
-    - g++-mingw-w64-i686
 
 - name: Execute Docker without sudo
   shell: sh -c "sudo usermod -aG docker vagrant"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 64bit 1/2
-  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-g++  /usr/bin/x86_64-w64-mingw32-g++-posix"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 64bit 2/2
-  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-gcc  /usr/bin/x86_64-w64-mingw32-gcc-posix"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 32bit 1/2
-  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 32bit 2/2
-  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-g++  /usr/bin/i686-w64-mingw32-g++-posix"
   become: yes
   become_user: vagrant
   become_method: sudo
@@ -297,3 +244,34 @@
         gateway 192.168.1.1
         dns-nameservers 192.168.1.1
         dns-nameservers 8.8.8.8"
+
+- name: Set up the Gitian LXC image.
+  shell: "source ~/.profile && /home/{{ gitian_user }}/gitian-builder/bin/make-base-vm --lxc --arch amd64 --distro ubuntu --suite bionic"
+  when: gitian_lxc_image.stat.exists == false
+  become: yes
+  become_user: "{{ gitian_user }}"
+  args:
+    chdir: "/home/{{ gitian_user }}/gitian-builder"
+    executable: /bin/bash
+
+- name: Clean the apt cache to free up space.
+  command: apt-get autoclean
+  register: autoclean_result
+  changed_when: "'Del' in autoclean_result.stdout"
+
+- include: gpg.yml
+  tags: gpg
+  become: no
+  when: gpg_key_id is defined and gpg_key_id != ''
+
+- include: ssh.yml
+  tags: ssh
+  become: no
+  when: ssh_key_name is defined and ssh_key_name != ''
+
+- name: Display help message.
+  debug:
+    msg: >-
+      Finished bootstrapping the Gitian host VM!
+      To enter the environment, run `vagrant ssh axe-build`
+      and then use `./gitian-build.py` to kick off a build.
