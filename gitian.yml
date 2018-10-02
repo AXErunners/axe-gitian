@@ -2,10 +2,14 @@
 - name: Apply the AXE Gitian builder role.
   become: yes
   hosts: localhost:axe-build
+  gather_facts: False
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
   vars:
     axe_git_repo_url: https://github.com/AXErunners/axe
-    axe_version: v1.1.5
     gpg_key_name: '8DFCBF8E5A4D8019'
+    axe_version: v1.1.7.1
     #gpg_key_name: 'F16219F4C23F91112E9C734A8DFCBF8E5A4D8019'
     git_name: 'Duke Leto'
     git_email: 'duke@leto.net'

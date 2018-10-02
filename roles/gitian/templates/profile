@@ -21,12 +21,11 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-alias gpg='gpg2'
-export DISTRO=debian
-export SUITE=jessie
+export DISTRO=ubuntu
+export SUITE=bionic
 export ARCH=amd64
 export USE_LXC=1
-export LXC_BRIDGE=lxcbr0
+export LXC_BRIDGE=br0
 export GITIAN_HOST_IP={{ gitian_host_ip }}
 export LXC_GUEST_IP={{ lxc_guest_ip }}
 export MIRROR_HOST={{ gitian_host_ip }}

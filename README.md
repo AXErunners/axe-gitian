@@ -65,11 +65,11 @@ Building AXE
 --------------
 
     vagrant ssh axe-build
-    ./gitian-build.sh
+    ./gitian-build.py
 
 The output from `gbuild` is informative. There are some common warnings which can be ignored, e.g. if you get an intermittent privileges error related to LXC then just execute the script again. The most important thing is that one reaches the step which says `Running build script (log in var/build.log)`. If not, then something else is wrong and you should let us know.
 
-Take a look at the variables near the top of `~/gitian-build.sh` and get familiar with its functioning, as it can handle most tasks.
+Take a look at the variables near the top of `~/gitian-build.py` and get familiar with its functioning, as it can handle most tasks.
 
 It's also a good idea to regularly `git pull` on this repository to obtain updates and re-run the entire VM provisioning for each release, to ensure current and consistent state for your builder.
 
@@ -78,7 +78,7 @@ Generating and uploading signatures
 
 After the build successfully completes, `gsign` will be called. Commit and push your signatures (both the .assert and .assert.sig files) to the [AXErunners/gitian.sigs](https://github.com/AXErunners/gitian.sigs) repository, or if that's not possible then create a pull request.
 
-Signatures can be verified by running `gitian-build.sh --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports AXE developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the AXE source repository.
+Signatures can be verified by running `gitian-build.py --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports AXE developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the AXE source repository.
 
 Working with GPG and SSH
 --------------------------
