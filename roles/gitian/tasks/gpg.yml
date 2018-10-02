@@ -48,6 +48,7 @@
   become_user: "{{ gitian_user }}"
   when: gpg_list_keys_result.stdout != '' and gpg_private_key.stdout is defined
   no_log: True
+  ignore_errors: true
   register: gpg_output
   changed_when: "'secret key imported' in gpg_output.stderr"
   failed_when: gpg_output.rc != 0 and 'already in secret keyring' not in gpg_output.stderr
