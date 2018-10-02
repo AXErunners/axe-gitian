@@ -21,7 +21,7 @@
     - curl
     - debootstrap
     - git
-    - gnupg
+    - gnupg2
     - kpartx
     - lintian
     - make
@@ -116,6 +116,99 @@
     owner: root
     group: root
     mode: "0644"
+
+- name: Add Docker GPG key
+  apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+
+- name: Add Docker APT repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
+
+- name: Install Docker
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - docker-ce
+    - g++-mingw-w64-x86-64
+    - g++-mingw-w64-i686
+    - g++-arm-linux-gnueabihf
+    - nsis
+    - wine-stable
+    - wine64
+    - bc
+    - cmake
+    - imagemagick
+    - libcap-dev
+    - librsvg2-bin
+    - libz-dev
+    - libbz2-dev
+    - libtiff-tools
+
+- name: Execute Docker without sudo
+  shell: sh -c "sudo usermod -aG docker vagrant"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 64bit 1/2
+  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-g++  /usr/bin/x86_64-w64-mingw32-g++-posix"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 64bit 2/2
+  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-gcc  /usr/bin/x86_64-w64-mingw32-gcc-posix"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 32bit 1/2
+  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Alternatives for Windows compiler 32bit 2/2
+  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-g++  /usr/bin/i686-w64-mingw32-g++-posix"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
+- name: Install KVM
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - qemu
+    - qemu-kvm
+    - libvirt-clients
+    - libvirt-daemon-system
+    - libvirt-bin
+    - bridge-utils
+    - virt-manager
+
+- name: Tune up KVM
+  blockinfile: |
+    dest=/etc/netplan/50-cloud-init.yaml
+    content="auto br0
+        iface br0 inet static
+        bridge_ports enp0s3
+        bridge_stp off
+        bridge_fd 9
+        address 192.168.1.10
+        netmask 255.255.255.0
+        network 192.168.1.0
+        broadcast 192.168.1.255
+        gateway 192.168.1.1
+        dns-nameservers 192.168.1.1
+        dns-nameservers 8.8.8.8"
 
 - name: Clone git repository for Gitian builder.
   git:
@@ -220,96 +313,3 @@
       Finished bootstrapping the Gitian host VM!
       To enter the environment, run `vagrant ssh axe-build`
       and then use `./gitian-build.py` to kick off a build.
-
-- name: Add Docker GPG key
-  apt_key: url=https://download.docker.com/linux/ubuntu/gpg
-
-- name: Add Docker APT repository
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable
-
-- name: Install Docker
-  apt:
-    name: "{{ item }}"
-    state: present
-    update_cache: yes
-  with_items:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - software-properties-common
-    - docker-ce
-    - g++-mingw-w64-x86-64
-    - g++-mingw-w64-i686
-    - g++-arm-linux-gnueabihf
-    - nsis
-    - wine-stable
-    - wine64
-    - bc
-    - cmake
-    - imagemagick
-    - libcap-dev
-    - librsvg2-bin
-    - libz-dev
-    - libbz2-dev
-    - libtiff-tools
-
-- name: Execute Docker without sudo
-  shell: sh -c "sudo usermod -aG docker vagrant"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 64bit 1/2
-  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-g++  /usr/bin/x86_64-w64-mingw32-g++-posix"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 64bit 2/2
-  shell: sh -c "sudo update-alternatives --set x86_64-w64-mingw32-gcc  /usr/bin/x86_64-w64-mingw32-gcc-posix"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 32bit 1/2
-  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Alternatives for Windows compiler 32bit 2/2
-  shell: sh -c "sudo update-alternatives --set i686-w64-mingw32-g++  /usr/bin/i686-w64-mingw32-g++-posix"
-  become: yes
-  become_user: vagrant
-  become_method: sudo
-
-- name: Install KVM
-  apt:
-    name: "{{ item }}"
-    state: present
-    update_cache: yes
-  with_items:
-    - qemu
-    - qemu-kvm
-    - libvirt-clients
-    - libvirt-daemon-system
-    - libvirt-bin
-    - bridge-utils
-    - virt-manager
-
-- name: Tune up KVM
-  blockinfile: |
-    dest=/etc/netplan/50-cloud-init.yaml
-    content="auto br0
-        iface br0 inet static
-        bridge_ports enp0s3
-        bridge_stp off
-        bridge_fd 9
-        address 192.168.1.10
-        netmask 255.255.255.0
-        network 192.168.1.0
-        broadcast 192.168.1.255
-        gateway 192.168.1.1
-        dns-nameservers 192.168.1.1
-        dns-nameservers 8.8.8.8"
