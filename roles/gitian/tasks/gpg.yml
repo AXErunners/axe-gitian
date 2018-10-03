@@ -44,11 +44,10 @@
     group: "{{ gitian_user }}"
 
 - name: Import the GPG private key to the Vagrant user.
-  command: "gpg2 --import /tmp/{{ gpg_key_id }}.sec"
+  command: "gpg2 --batch --import /tmp/{{ gpg_key_id }}.sec"
   become_user: "{{ gitian_user }}"
   when: gpg_list_keys_result.stdout != '' and gpg_private_key.stdout is defined
   no_log: True
-  ignore_errors: true
   register: gpg_output
   changed_when: "'secret key imported' in gpg_output.stderr"
   failed_when: gpg_output.rc != 0 and 'already in secret keyring' not in gpg_output.stderr
