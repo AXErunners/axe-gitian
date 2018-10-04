@@ -57,19 +57,21 @@ Make sure VirtualBox, Vagrant and Ansible are installed, and then run:
 
     vagrant up --provision axe-build
 
-This will provision a Gitian host virtual machine that uses a Linux container (LXC) guest to perform the actual builds.
+This will provision a Gitian host virtual machine that uses a container (LXC/KVM/Docker) guest to perform the actual builds.
 
 Use `git stash` to save one's local customizations to `gitian.yml`.
 
-Building AXE
+Building AXE (Docker)
 --------------
 
     vagrant ssh axe-build
-    ./gitian-build.py
+    #replace $SIGNER and $VERSION to match your gitian.yml
+    ./gitian-build.py --setup --docker $signer $version
+    ./gitian-build.py --docker -B $SIGNER $VERSION -j 4
 
 The output from `gbuild` is informative. There are some common warnings which can be ignored, e.g. if you get an intermittent privileges error related to LXC then just execute the script again. The most important thing is that one reaches the step which says `Running build script (log in var/build.log)`. If not, then something else is wrong and you should let us know.
 
-Take a look at the variables near the top of `~/gitian-build.py` and get familiar with its functioning, as it can handle most tasks.
+Take a look at the variables near the middle of `~/gitian-build.py` and get familiar with its functioning, as it can handle most tasks.
 
 It's also a good idea to regularly `git pull` on this repository to obtain updates and re-run the entire VM provisioning for each release, to ensure current and consistent state for your builder.
 
@@ -78,7 +80,7 @@ Generating and uploading signatures
 
 After the build successfully completes, `gsign` will be called. Commit and push your signatures (both the .assert and .assert.sig files) to the [AXErunners/gitian.sigs](https://github.com/AXErunners/gitian.sigs) repository, or if that's not possible then create a pull request.
 
-Signatures can be verified by running `gitian-build.py --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports AXE developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the AXE source repository.
+Signatures can be verified by running `gitian-build.py --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports AXE developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-keys` within the AXE source repository.
 
 Working with GPG and SSH
 --------------------------
@@ -115,3 +117,5 @@ Other notes
 Port 2200 on the host machine should be forwarded to port 22 on the guest virtual machine.
 
 The automation and configuration management assumes that VirtualBox will assign the IP address `10.0.2.15` to the Gitian host Vagrant VM.
+
+Tested with Ansible 2.6.4 and Vagrant 2.1.5 on macOS Mojave (10.14)
