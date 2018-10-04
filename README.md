@@ -66,8 +66,8 @@ Building AXE (Docker)
 
     vagrant ssh axe-build
     #replace $SIGNER and $VERSION to match your gitian.yml
-    ./gitian-build.py --setup --docker $signer $version
-    ./gitian-build.py --docker -B $SIGNER $VERSION -j 4
+    ./gitian-build.py --setup $signer $version -d
+    ./gitian-build.py -B $SIGNER $VERSION -d
 
 The output from `gbuild` is informative. There are some common warnings which can be ignored, e.g. if you get an intermittent privileges error related to LXC then just execute the script again. The most important thing is that one reaches the step which says `Running build script (log in var/build.log)`. If not, then something else is wrong and you should let us know.
 
