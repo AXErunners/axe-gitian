@@ -1,6 +1,8 @@
 AXE deterministic builds
 ==========================
 
+<img src="https://raw.githubusercontent.com/AXErunners/media/master/etc/axe-gitian-mojave.png" width="425">
+
 This is a deterministic build environment for [AXE](https://github.com/AXErunners/axe-gitian) that uses [Gitian](https://gitian.org/).
 
 Gitian provides a way to be reasonably certain that the AXE executables are really built from the exact source on GitHub and have not been tampered with. It also makes sure that the same, tested dependencies are used and statically built into the executable.
