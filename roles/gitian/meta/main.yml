@@ -5,7 +5,7 @@ galaxy_info:
   company: AXE
   galaxy_tags: []
   license: GPLv2
-  min_ansible_version: 2.1.2
+  min_ansible_version: 2.6.4
   platforms:
     - name: Ubuntu
       versions:
