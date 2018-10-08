@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: "Kevin Gallagher (@ageis), Kent Sommer (@kentsommer), Kirill Orlov (@charlesrocket) and Jonathan Leto (@leto)"
+  author: Kevin Gallagher (@ageis) Kent Sommer (@kentsommer) Kirill Orlov (@charlesrocket) and Jonathan Leto (@leto)
   description: Sets up a deterministic Gitian builder VM for AXE.
   company: AXE
   galaxy_tags: []
