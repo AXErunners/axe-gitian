@@ -10,6 +10,5 @@ axe_version: master
 gitian_host_ip: 10.0.2.15
 lxc_guest_ip: 10.0.3.5
 axe_developer_pubkeys:
-  # TODO: Set actual developer keys
   - name: charlie137
     id: charlie137
