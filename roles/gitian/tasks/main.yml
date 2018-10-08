@@ -202,20 +202,6 @@
   become_user: vagrant
   become_method: sudo
 
-- name: Install KVM
-  apt:
-    name: "{{ item }}"
-    state: present
-    update_cache: yes
-  with_items:
-    - qemu
-    - qemu-kvm
-    - libvirt-clients
-    - libvirt-daemon-system
-    - libvirt-bin
-    - bridge-utils
-    - virt-manager
-
 - name: Clean the apt cache to free up space.
   command: apt-get autoclean
   register: autoclean_result
