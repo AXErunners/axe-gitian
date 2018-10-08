@@ -232,15 +232,6 @@
         dns-nameservers 192.168.1.1
         dns-nameservers 8.8.8.8"
 
-- name: Set up the Gitian LXC image.
-  shell: "source ~/.profile && /home/{{ gitian_user }}/gitian-builder/bin/make-base-vm --lxc --arch amd64 --distro ubuntu --suite bionic"
-  when: gitian_lxc_image.stat.exists == false
-  become: yes
-  become_user: "{{ gitian_user }}"
-  args:
-    chdir: "/home/{{ gitian_user }}/gitian-builder"
-    executable: /bin/bash
-
 - name: Clean the apt cache to free up space.
   command: apt-get autoclean
   register: autoclean_result
