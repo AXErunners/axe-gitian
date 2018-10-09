@@ -202,45 +202,6 @@
   become_user: vagrant
   become_method: sudo
 
-- name: Install KVM
-  apt:
-    name: "{{ item }}"
-    state: present
-    update_cache: yes
-  with_items:
-    - qemu
-    - qemu-kvm
-    - libvirt-clients
-    - libvirt-daemon-system
-    - libvirt-bin
-    - bridge-utils
-    - virt-manager
-
-- name: Tune up KVM
-  blockinfile: |
-    dest=/etc/netplan/50-cloud-init.yaml
-    content="auto br0
-        iface br0 inet static
-        bridge_ports enp0s3
-        bridge_stp off
-        bridge_fd 9
-        address 192.168.1.10
-        netmask 255.255.255.0
-        network 192.168.1.0
-        broadcast 192.168.1.255
-        gateway 192.168.1.1
-        dns-nameservers 192.168.1.1
-        dns-nameservers 8.8.8.8"
-
-- name: Set up the Gitian LXC image.
-  shell: "source ~/.profile && /home/{{ gitian_user }}/gitian-builder/bin/make-base-vm --lxc --arch amd64 --distro ubuntu --suite bionic"
-  when: gitian_lxc_image.stat.exists == false
-  become: yes
-  become_user: "{{ gitian_user }}"
-  args:
-    chdir: "/home/{{ gitian_user }}/gitian-builder"
-    executable: /bin/bash
-
 - name: Clean the apt cache to free up space.
   command: apt-get autoclean
   register: autoclean_result
