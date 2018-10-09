@@ -65,14 +65,14 @@ def build():
         print('\nCompiling ' + args.version + ' Windows')
         subprocess.check_call(['bin/gbuild', '-j', args.jobs, '-m', args.memory, '--commit', 'axe='+args.commit, '--url', 'axe='+args.url, '../axe/contrib/gitian-descriptors/gitian-win.yml'])
         subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-win-unsigned', '--destination', '../gitian.sigs/', '../axe/contrib/gitian-descriptors/gitian-win.yml'])
-        subprocess.check_call('mv build/out/axecore-*-win-unsigned.tar.gz inputs/', shell=True)
+        subprocess.check_call('mv build/out/axecore-*-win-unsigned.tar.gz inputs/axecore-win-unsigned.tar.gz', shell=True)
         subprocess.check_call('mv build/out/axecore-*.zip build/out/axecore-*.exe ../axecore-binaries/'+args.version, shell=True)
 
     if args.macos:
         print('\nCompiling ' + args.version + ' MacOS')
         subprocess.check_call(['bin/gbuild', '-j', args.jobs, '-m', args.memory, '--commit', 'axe='+args.commit, '--url', 'axe='+args.url, '../axe/contrib/gitian-descriptors/gitian-osx.yml'])
         subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-osx-unsigned', '--destination', '../gitian.sigs/', '../axe/contrib/gitian-descriptors/gitian-osx.yml'])
-        subprocess.check_call('mv build/out/axecore-*-osx-unsigned.tar.gz inputs/', shell=True)
+        subprocess.check_call('mv build/out/axecore-*-osx-unsigned.tar.gz inputs/axecore-osx-unsigned.tar.gz', shell=True)
         subprocess.check_call('mv build/out/axecore-*.tar.gz build/out/axecore-*.dmg ../axecore-binaries/'+args.version, shell=True)
 
     os.chdir(workdir)
@@ -92,7 +92,6 @@ def sign():
 
     if args.windows:
         print('\nSigning ' + args.version + ' Windows')
-        subprocess.check_call('cp inputs/axecore-' + args.version + '-win-unsigned.tar.gz inputs/axecore-win-unsigned.tar.gz', shell=True)
         subprocess.check_call(['bin/gbuild', '-i', '--commit', 'signature='+args.commit, '../axe/contrib/gitian-descriptors/gitian-win-signer.yml'])
         subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-win-signed', '--destination', '../gitian.sigs/', '../axe/contrib/gitian-descriptors/gitian-win-signer.yml'])
         subprocess.check_call('mv build/out/axecore-*win64-setup.exe ../axecore-binaries/'+args.version, shell=True)
@@ -100,7 +99,6 @@ def sign():
 
     if args.macos:
         print('\nSigning ' + args.version + ' MacOS')
-        subprocess.check_call('cp inputs/axecore-' + args.version + '-osx-unsigned.tar.gz inputs/axecore-osx-unsigned.tar.gz', shell=True)
         subprocess.check_call(['bin/gbuild', '-i', '--commit', 'signature='+args.commit, '../axe/contrib/gitian-descriptors/gitian-osx-signer.yml'])
         subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-osx-signed', '--destination', '../gitian.sigs/', '../axe/contrib/gitian-descriptors/gitian-osx-signer.yml'])
         subprocess.check_call('mv build/out/axecore-osx-signed.dmg ../axecore-binaries/'+args.version+'/axecore-'+args.version+'-osx.dmg', shell=True)
