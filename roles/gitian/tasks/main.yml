@@ -228,6 +228,7 @@
     src: MacOSX10.11.sdk.tar.gz
     dest: gitian-builder/inputs/MacOSX10.11.sdk.tar.gz
     owner: vagrant
+  ignore_errors: yes
 
 - name: Display help message.
   debug:
