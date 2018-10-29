@@ -1,3 +1,4 @@
 .vagrant/
 *.logs
 *.tar.gz
+.DS_Store
