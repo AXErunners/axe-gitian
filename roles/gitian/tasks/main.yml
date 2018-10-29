@@ -217,6 +217,18 @@
   become: no
   when: ssh_key_name is defined and ssh_key_name != ''
 
+- file:
+    path: "gitian-builder/inputs"
+    state: directory
+    recurse: yes
+    owner: vagrant
+
+- name: Copy Apple SDK
+  copy:
+    src: MacOSX10.11.sdk.tar.gz
+    dest: gitian-builder/inputs/MacOSX10.11.sdk.tar.gz
+    owner: vagrant
+
 - name: Display help message.
   debug:
     msg: >-
