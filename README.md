@@ -36,6 +36,10 @@ Install prerequisites first: `sudo apt-get install build-essential libssl-dev li
 
     sudo pip install -U ansible
 
+##### Apple SDK
+
+Builds for macOS are required [Apple SDK](https://github.com/AXErunners/axe/blob/master/doc/README_osx.md). Place this tarball (`MacOSX10.11.sdk.tar.gz`) into `axe-gitian` folder and Ansible will copy it during the run.
+
 How to get started
 ------------------
 
@@ -120,4 +124,4 @@ Port 2200 on the host machine should be forwarded to port 22 on the guest virtua
 
 The automation and configuration management assumes that VirtualBox will assign the IP address `10.0.2.15` to the Gitian host Vagrant VM.
 
-Tested with Ansible 2.6.4 and Vagrant 2.1.5 on macOS Mojave (10.14)
+Tested with Ansible 2.6.4 and Vagrant 2.2.0 on macOS Mojave (10.14)
