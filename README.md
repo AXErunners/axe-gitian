@@ -36,6 +36,10 @@ Install prerequisites first: `sudo apt-get install build-essential libssl-dev li
 
     sudo pip install -U ansible
 
+##### Apple SDK
+
+Builds for macOS are required [Apple SDK](https://github.com/AXErunners/axe/blob/master/doc/README_osx.md). Place `MacOSX10.11.sdk.tar.gz` into `axe-gitian` so the box will copy it during the run.
+
 How to get started
 ------------------
 
