@@ -30,7 +30,7 @@ Linux kernel headers are required to setup the `/dev/vboxdrv` device and Virtual
 
 Download the latest version of Vagrant from [their website](https://www.vagrantup.com/downloads.html) or
 
-    sudo apt install vagrant
+    sudo apt-get install vagrant
 
 #### Ansible
 
