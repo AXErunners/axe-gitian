@@ -52,7 +52,7 @@ How to get started
 axe_git_repo_url: 'https://github.com/AXErunners/axe'
 
 # Specific tag or branch you want to build.
-axe_version: '1.1.7'
+axe_version: 'v1.1.8'
 
 # The name@ in the e-mail address of your GPG key, alternatively a key ID.
 gpg_key_name: 'F16219F4C23F91112E9C734A8DFCBF8E5A4D8019'

@@ -9,9 +9,9 @@
   vars:
     axe_git_repo_url: https://github.com/AXErunners/axe
     gpg_key_name: '8DFCBF8E5A4D8019'
-    axe_version: v1.1.7.1
     git_name: 'Duke Leto'
     git_email: 'duke@leto.net'
+    axe_version: v1.1.8
     # optional - auto imports private key necessary for signing
     gpg_key_id: '8DFCBF8E5A4D8019'
     # optional
