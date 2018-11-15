@@ -166,7 +166,7 @@
 
 - name: Wait extra time for VM to come back up.
   pause:
-    seconds: 13
+    seconds: 60
 
 - name: Set Git username.
   command: "git config --global user.name '{{ git_name }}'"
