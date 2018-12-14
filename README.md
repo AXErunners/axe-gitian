@@ -44,7 +44,7 @@ Install prerequisites first: `sudo apt-get install build-essential libssl-dev li
 
 ##### Apple SDK
 
-[Apple SDK](https://github.com/AXErunners/axe/blob/master/doc/README_osx.md) required for macOS builds. Place this tarball (`MacOSX10.11.sdk.tar.gz`) into _axe-gitian_ folder and Ansible will copy it during the run.
+[Apple SDK](https://github.com/AXErunners/axe/blob/master/doc/README_osx.md) required for macOS builds. Place this tarball (`MacOSX10.11.sdk.tar.gz`) into _axe-gitian_ folder and _Ansible_ will copy it during the run.
 
 How to get started
 ------------------
