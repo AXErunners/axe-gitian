@@ -20,7 +20,7 @@ It relies upon [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://ww
 
 #### VirtualBox
 
-If you use Linux, we recommend obtaining VirtualBox through your package manager instead of the Oracle website.
+If you use Linux, we recommend obtaining _VirtualBox_ through your package manager instead of the Oracle website.
 
     sudo apt-get install virtualbox
 
@@ -28,7 +28,7 @@ Linux kernel headers are required to setup the `/dev/vboxdrv` device and Virtual
 
 #### Vagrant
 
-Download the latest version of Vagrant from [their website](https://www.vagrantup.com/downloads.html) or
+Download the latest version of _Vagrant_ from [their website](https://www.vagrantup.com/downloads.html) or
 
     sudo apt-get install vagrant
 
@@ -44,10 +44,56 @@ Install prerequisites first: `sudo apt-get install build-essential libssl-dev li
 
 ##### Apple SDK
 
-[Apple SDK](https://github.com/AXErunners/axe/blob/master/doc/README_osx.md) required for macOS builds. Place this tarball (`MacOSX10.11.sdk.tar.gz`) into `axe-gitian` folder and Ansible will copy it during the run.
+[Apple SDK](https://github.com/AXErunners/axe/blob/master/doc/README_osx.md) required for macOS builds. Place this tarball (`MacOSX10.11.sdk.tar.gz`) into _axe-gitian_ folder and Ansible will copy it during the run.
 
 How to get started
 ------------------
+
+### Decide on a gpg keypair to use for Gitian
+
+You can generate a keypair specifically for Gitian builds with a command like the one below.
+
+```
+$ gpg2 --quick-gen-key --batch --passphrase '' "Harry Potter (axe-gitian) <hpotter@hogwarts.wiz>"
+gpg: key 3F0C2117D53A4A49 marked as ultimately trusted
+gpg: directory '/home/hpotter/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/home/hpotter/.gnupg/openpgp-revocs.d/3F14A629C06FA31D59C64FE93F0C2117D53A4A49.rev'
+```
+
+Some explanation of the arguments used in the above example:
+
+    --quick-generate-key --batch   This combination of options allows options to be given on the
+                                   command line. Other key generation options use interative
+                                   prompts.
+
+    --passphrase ''                Passphrase for the generated key. An empty string as shown here
+                                   means save the private key unencrypted.
+
+    "Name (Comment) <Email>"       The user id (also called uid) to associate with the generated
+                                   keys. Concatenating a name, an optional comment, and an email
+                                   address using this format is a gpg convention.
+
+
+You can check that the key was generated and added to your local gpg key database, and see its
+fingerprint value, like this:
+```
+$ gpg2 --list-keys
+/home/hpotter/.gnupg/pubring.kbx
+----------------------------------
+pub   rsa2048 2018-04-23 [SC] [expires: 2020-04-22]
+      3F14A629C06FA31D59C64FE93F0C2117D53A4A49
+uid           [ultimate] Harry Potter (axe-gitian) <hpotter@hogwarts.wiz>
+sub   rsa2048 2018-04-23 [E]
+```
+
+Update the `gpg_key_id` and `gpg_key_name` entries in `gitian.yml` as follows:
+
+- `gpg_key_id`: In the example output shown here, this is the 40 character string
+`3F14A629C06FA31D59C64FE93F0C2117D53A4A49`. Some versions of gpg may truncate this value, e.g. to 8
+or 16 characters. You should be able to use the truncated value.
+
+- `gpg_key_name`: the part before the @ symbol of the associated email address. In our example
+this is `hpotter`.
 
 ### Edit settings in gitian.yml
 
@@ -65,7 +111,7 @@ gpg_key_name: 'F16219F4C23F91112E9C734A8DFCBF8E5A4D8019'
 ssh_key_name: ''
 ```
 
-Make sure VirtualBox, Vagrant and Ansible are installed, and then run:
+Make sure all dependencies are installed, and then run:
 
     vagrant up --provision axe-build
 
