@@ -54,10 +54,10 @@ How to get started
 You can generate a keypair specifically for Gitian builds with a command like the one below.
 
 ```
-$ gpg2 --quick-gen-key --batch --passphrase '' "Harry Potter (axe-gitian) <hpotter@hogwarts.wiz>"
+$ gpg2 --quick-gen-key --batch --passphrase '' "Korben Dallas (axe-gitian) <kdallas@multipass.gov>"
 gpg: key 3F0C2117D53A4A49 marked as ultimately trusted
-gpg: directory '/home/hpotter/.gnupg/openpgp-revocs.d' created
-gpg: revocation certificate stored as '/home/hpotter/.gnupg/openpgp-revocs.d/3F14A629C06FA31D59C64FE93F0C2117D53A4A49.rev'
+gpg: directory '/home/kdallas/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/home/kdallas/.gnupg/openpgp-revocs.d/3F14A629C06FA31D59C64FE93F0C2117D53A4A49.rev'
 ```
 
 Some explanation of the arguments used in the above example:
@@ -78,11 +78,11 @@ You can check that the key was generated and added to your local gpg key databas
 fingerprint value, like this:
 ```
 $ gpg2 --list-keys
-/home/hpotter/.gnupg/pubring.kbx
+/home/kdallas/.gnupg/pubring.kbx
 ----------------------------------
 pub   rsa2048 2018-04-23 [SC] [expires: 2020-04-22]
       3F14A629C06FA31D59C64FE93F0C2117D53A4A49
-uid           [ultimate] Harry Potter (axe-gitian) <hpotter@hogwarts.wiz>
+uid           [ultimate] Korben Dallas (axe-gitian) <kdallas@multipass.gov>
 sub   rsa2048 2018-04-23 [E]
 ```
 
@@ -93,7 +93,7 @@ Update the `gpg_key_id` and `gpg_key_name` entries in `gitian.yml` as follows:
 or 16 characters. You should be able to use the truncated value.
 
 - `gpg_key_name`: the part before the @ symbol of the associated email address. In our example
-this is `hpotter`.
+this is `kdallas`.
 
 ### Edit settings in gitian.yml
 
