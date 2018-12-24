@@ -11,7 +11,7 @@
     gpg_key_name: '8DFCBF8E5A4D8019'
     git_name: 'Duke Leto'
     git_email: 'duke@leto.net'
-    axe_version: v1.1.8
+    axe_version: master
     # optional - auto imports private key necessary for signing
     gpg_key_id: '8DFCBF8E5A4D8019'
     # optional
