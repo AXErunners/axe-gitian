@@ -12,24 +12,24 @@
 
 - name: Install Gitian dependencies.
   apt:
-    name: "{{ item }}"
+    name:
+      - apt-cacher-ng
+      - bridge-utils
+      - curl
+      - debootstrap
+      - git
+      - gnupg2
+      - kpartx
+      - lintian
+      - make
+      - parted
+      - python-cheetah
+      - qemu-utils
+      - ruby
+      - sudo
     state: present
     update_cache: yes
-  with_items:
-    - apt-cacher-ng
-    - bridge-utils
-    - curl
-    - debootstrap
-    - git
-    - gnupg2
-    - kpartx
-    - lintian
-    - make
-    - parted
-    - python-cheetah
-    - qemu-utils
-    - ruby
-    - sudo
+
 
 - name: Create Bionic link
   file:
