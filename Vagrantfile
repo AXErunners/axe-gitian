@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
     if (_retry)
         exec "vagrant " + ARGV.join(' ')
     end
-    gitian.disksize.size = "42GB"
+    gitian.disksize.size = "25GB"
     gitian.vm.box = "ubuntu/bionic64"
     gitian.vm.network "forwarded_port", guest: 22, host: 2200, auto_correct: true
     gitian.vm.provision "ansible" do |ansible|
