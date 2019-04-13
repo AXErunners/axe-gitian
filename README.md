@@ -14,7 +14,7 @@ More independent Gitian builders are needed, which is why this guide exists.
 Requirements
 ------------
 
-4GB of RAM, at least two cores (with hardware virtualization), [Git](https://git-scm.com/), [GnuPG](https://www.gnupg.org/).
+6GB of RAM, at least 2 cores, [Git](https://git-scm.com/), [GnuPG](https://www.gnupg.org/).
 
 It relies upon [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) plus [Ansible](https://www.ansible.com/).
 
@@ -102,7 +102,7 @@ this is `kdallas`.
 axe_git_repo_url: 'https://github.com/AXErunners/axe'
 
 # Specific tag or branch you want to build.
-axe_version: 'v1.1.8'
+axe_version: 'master'
 
 # The name@ in the e-mail address of your GPG key, alternatively a key ID.
 gpg_key_name: 'F16219F4C23F91112E9C734A8DFCBF8E5A4D8019'
