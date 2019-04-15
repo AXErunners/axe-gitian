@@ -176,4 +176,4 @@ Port 2200 on the host machine should be forwarded to port 22 on the guest virtua
 
 The automation and configuration management assumes that VirtualBox will assign the IP address `10.0.2.15` to the Gitian host Vagrant VM.
 
-Tested with VirtualBox 5.2, Ansible 2.7.10 and Vagrant 2.2.4 on Ubuntu 18, macOS Mojave.
+Tested with VirtualBox 6.0, Ansible 2.7.10 and Vagrant 2.2.4 on Ubuntu 18, macOS Mojave.
