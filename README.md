@@ -113,7 +113,7 @@ ssh_key_name: ''
 
 Make sure all dependencies are installed, and then run:
 
-    vagrant up --provision axe-build
+    vagrant up axe-build
 
 This will provision a Gitian host virtual machine that uses a container (Docker) guest to perform the actual builds.
 
