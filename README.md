@@ -14,7 +14,7 @@ More independent Gitian builders are needed, which is why this guide exists.
 Requirements
 ------------
 
-6GB of RAM, at least 2 cores, [Git](https://git-scm.com/), [GnuPG](https://www.gnupg.org/).
+6GB of RAM, 4 cores, [Git](https://git-scm.com/), [GnuPG](https://www.gnupg.org/).
 
 It relies upon [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) plus [Ansible](https://www.ansible.com/).
 
@@ -113,7 +113,7 @@ ssh_key_name: ''
 
 Make sure all dependencies are installed, and then run:
 
-    vagrant up --provision axe-build
+    vagrant up axe-build
 
 This will provision a Gitian host virtual machine that uses a container (Docker) guest to perform the actual builds.
 
@@ -176,4 +176,4 @@ Port 2200 on the host machine should be forwarded to port 22 on the guest virtua
 
 The automation and configuration management assumes that VirtualBox will assign the IP address `10.0.2.15` to the Gitian host Vagrant VM.
 
-Tested with VirtualBox 6.0, Ansible 2.7.10 and Vagrant 2.2.4 on Ubuntu 18, macOS Mojave.
+Tested with VirtualBox 6.0.6, Ansible 2.7.10 and Vagrant 2.2.4 on Ubuntu 18, macOS Mojave.
