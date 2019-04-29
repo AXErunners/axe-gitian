@@ -14,7 +14,7 @@ More independent Gitian builders are needed, which is why this guide exists.
 Requirements
 ------------
 
-6GB of RAM, at least 2 cores, [Git](https://git-scm.com/), [GnuPG](https://www.gnupg.org/).
+6GB of RAM, 4 cores, [Git](https://git-scm.com/), [GnuPG](https://www.gnupg.org/).
 
 It relies upon [Vagrant](https://www.vagrantup.com/) and [VirtualBox](https://www.virtualbox.org/) plus [Ansible](https://www.ansible.com/).
 
