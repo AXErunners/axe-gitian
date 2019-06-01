@@ -60,12 +60,14 @@ def build():
     if args.linux:
         print('\nCompiling ' + args.version + ' Linux')
         subprocess.check_call(['bin/gbuild', '-j', args.jobs, '-m', args.memory, '--commit', 'axe='+args.commit, '--url', 'axe='+args.url, '../axe/contrib/gitian-descriptors/gitian-linux.yml'])
+        print('\a')
         subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-linux', '--destination', '../gitian.sigs/', '../axe/contrib/gitian-descriptors/gitian-linux.yml'])
         subprocess.check_call('mv build/out/axecore-*.tar.gz build/out/src/axecore-*.tar.gz ../axecore-binaries/'+args.version, shell=True)
 
     if args.windows:
         print('\nCompiling ' + args.version + ' Windows')
         subprocess.check_call(['bin/gbuild', '-j', args.jobs, '-m', args.memory, '--commit', 'axe='+args.commit, '--url', 'axe='+args.url, '../axe/contrib/gitian-descriptors/gitian-win.yml'])
+        print('\a')
         subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-win-unsigned', '--destination', '../gitian.sigs/', '../axe/contrib/gitian-descriptors/gitian-win.yml'])
         subprocess.check_call('mv build/out/axecore-*-win-unsigned.tar.gz inputs/axecore-win-unsigned.tar.gz', shell=True)
         subprocess.check_call('mv build/out/axecore-*.zip build/out/axecore-*.exe ../axecore-binaries/'+args.version, shell=True)
@@ -73,6 +75,7 @@ def build():
     if args.macos:
         print('\nCompiling ' + args.version + ' MacOS')
         subprocess.check_call(['bin/gbuild', '-j', args.jobs, '-m', args.memory, '--commit', 'axe='+args.commit, '--url', 'axe='+args.url, '../axe/contrib/gitian-descriptors/gitian-osx.yml'])
+        print('\a')
         subprocess.check_call(['bin/gsign', '-p', args.sign_prog, '--signer', args.signer, '--release', args.version+'-osx-unsigned', '--destination', '../gitian.sigs/', '../axe/contrib/gitian-descriptors/gitian-osx.yml'])
         subprocess.check_call('mv build/out/axecore-*-osx-unsigned.tar.gz inputs/axecore-osx-unsigned.tar.gz', shell=True)
         subprocess.check_call('mv build/out/axecore-*.tar.gz build/out/axecore-*.dmg ../axecore-binaries/'+args.version, shell=True)
