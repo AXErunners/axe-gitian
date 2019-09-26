@@ -40,7 +40,7 @@ Install prerequisites first: `sudo apt-get install build-essential libssl-dev li
 
 #### GnuPG
 
-    sudo apt install gnupg
+    sudo apt install gnupg2
 
 ##### Apple SDK
 
@@ -54,7 +54,7 @@ How to get started
 You can generate a keypair specifically for Gitian builds with a command like the one below.
 
 ```
-$ gpg --quick-gen-key --batch --passphrase '' "Korben Dallas (axe-gitian) <kdallas@multipass.gov>"
+$ gpg2 --quick-gen-key --batch --passphrase '' "Korben Dallas (axe-gitian) <kdallas@multipass.gov>"
 gpg: key 3F0C2117D53A4A49 marked as ultimately trusted
 gpg: directory '/home/kdallas/.gnupg/openpgp-revocs.d' created
 gpg: revocation certificate stored as '/home/kdallas/.gnupg/openpgp-revocs.d/3F14A629C06FA31D59C64FE93F0C2117D53A4A49.rev'
@@ -77,7 +77,7 @@ Some explanation of the arguments used in the above example:
 You can check that the key was generated and added to your local gpg key database, and see its
 fingerprint value, like this:
 ```
-$ gpg --list-keys
+$ gpg2 --list-keys
 /home/kdallas/.gnupg/pubring.kbx
 ----------------------------------
 pub   rsa2048 2018-04-23 [SC] [expires: 2020-04-22]
@@ -176,4 +176,4 @@ Port 2200 on the host machine should be forwarded to port 22 on the guest virtua
 
 The automation and configuration management assumes that VirtualBox will assign the IP address `10.0.2.15` to the Gitian host Vagrant VM.
 
-Tested with VirtualBox 6.0.10, Ansible 2.8.4 and Vagrant 2.2.5 on Ubuntu 18, macOS Mojave.
+Tested with VirtualBox 6.0.10, Ansible 2.8.4 and Vagrant 2.2.5 on Ubuntu 19, macOS Mojave.

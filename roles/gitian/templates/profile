@@ -30,3 +30,4 @@ export GITIAN_HOST_IP={{ gitian_host_ip }}
 export LXC_GUEST_IP={{ lxc_guest_ip }}
 export MIRROR_HOST={{ gitian_host_ip }}
 export GPG_TTY="$(tty)"
+alias gpg='gpg2'
