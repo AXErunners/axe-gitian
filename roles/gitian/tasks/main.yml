@@ -19,7 +19,6 @@
       - debootstrap
       - git
       - gnupg2
-      - gnupg
       - kpartx
       - lintian
       - make
