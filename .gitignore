@@ -6,5 +6,6 @@ gitian.sigs/*
 local/*
 !local/README.md
 axecore-binaries/*
+*.log
 .DS_Store
 *.sdk.tar.gz
