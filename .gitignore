@@ -7,3 +7,4 @@ local/*
 !local/README.md
 axecore-binaries/*
 .DS_Store
+*.sdk.tar.gz
