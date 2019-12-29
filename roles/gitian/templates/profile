@@ -21,7 +21,7 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-export DISTRO=debian
+export DISTRO=ubuntu
 export ARCH=amd64
 export USE_LXC=1
 export LXC_BRIDGE=lxcbr0
