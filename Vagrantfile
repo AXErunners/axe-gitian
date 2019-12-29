@@ -2,26 +2,20 @@
 # vi: set ft=ruby :
 Vagrant.configure(2) do |config|
 
-  config.ssh.forward_agent = true
-  config.vm.define 'axe-build', autostart: false do |gitian|
-    required_plugins = %w( vagrant-vbguest vagrant-disksize )
-    _retry = false
-    required_plugins.each do |plugin|
-        unless Vagrant.has_plugin? plugin
-            system "vagrant plugin install #{plugin}"
-            _retry=true
-        end
-    end
+  config.vagrant.plugins = {
+    "vagrant-disksize" => {"version" => "0.1.3"},
+    "vagrant-scp" => {"version" => "0.5.7"}
+  }
 
-    if (_retry)
-        exec "vagrant " + ARGV.join(' ')
-    end
-    gitian.disksize.size = "25GB"
-    gitian.vm.box = "ubuntu/bionic64"
+  config.ssh.forward_agent = true
+  config.disksize.size = '24GB'
+  config.vm.define 'axe-build', autostart: false do |gitian|
+    gitian.vm.box = "debian/stretch64"
+    gitian.vm.box_version = "9.9.0"
     gitian.vm.network "forwarded_port", guest: 22, host: 2200, auto_correct: true
     gitian.vm.provision "ansible" do |ansible|
       ansible.playbook = "gitian.yml"
-      ansible.verbose = 'v'
+      ansible.verbose = 'vvv'
       ansible.raw_arguments = Shellwords.shellsplit(ENV['ANSIBLE_ARGS']) if ENV['ANSIBLE_ARGS']
     end
     gitian.vm.provider "virtualbox" do |v|
@@ -31,7 +25,7 @@ Vagrant.configure(2) do |config|
     end
 #    gitian.vm.synced_folder "~/.gnupg", "/home/vagrant/.gnupg", type: "sshfs"
 #    gitian.vm.synced_folder "./gitian.sigs", "/home/vagrant/gitian.sigs", create: true
-#    gitian.vm.synced_folder "./axe-binaries", "/home/vagrant/axe-binaries", create: true
+#    gitian.vm.synced_folder "./axecore-binaries", "/home/vagrant/axecore-binaries", create: true
     gitian.vm.post_up_message = "AXE deterministic build environment started."
   end
 
