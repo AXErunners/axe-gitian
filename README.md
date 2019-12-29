@@ -417,11 +417,11 @@ axe-gitian$
 
 ## Decide on a gpg keypair to use for gitian
 
-You can generate a keypair specifically for zcash gitian builds with a command like the one below.
+You can generate a keypair specifically for axe gitian builds with a command like the one below.
 
 
 ```
-axe-gitian$ gpg --quick-generate-key --batch --passphrase '' "Harry Potter (zcash gitian) <hpotter@hogwarts.wiz>"
+axe-gitian$ gpg --quick-generate-key --batch --passphrase '' "Harry Potter (axe gitian) <hpotter@hogwarts.wiz>"
 gpg: key 3F0C2117D53A4A49 marked as ultimately trusted
 gpg: directory '/home/hpotter/.gnupg/openpgp-revocs.d' created
 gpg: revocation certificate stored as '/home/hpotter/.gnupg/openpgp-revocs.d/3F14A629C06FA31D59C64FE93F0C2117D53A4A49.rev'
@@ -449,7 +449,7 @@ axe-gitian$ gpg --list-keys
 ----------------------------------
 pub   rsa2048 2018-04-23 [SC] [expires: 2020-04-22]
       3F14A629C06FA31D59C64FE93F0C2117D53A4A49
-uid           [ultimate] Harry Potter (zcash gitian) <hpotter@hogwarts.wiz>
+uid           [ultimate] Harry Potter (axe gitian) <hpotter@hogwarts.wiz>
 sub   rsa2048 2018-04-23 [E]
 ```
 
@@ -476,11 +476,11 @@ axe-gitian$ vagrant plugin install --local
 
 
 
-## Configure the version of zcash you want to build and sign
+## Configure the version of axe you want to build and sign
 
-Set the value of the `AXE_VERSION` variable in `.env` to point to the zcash commit you want to
+Set the value of the `AXE_VERSION` variable in `.env` to point to the axe commit you want to
 create a signature for. Likely you want the name of a
-[git-tagged zcash version](https://github.com/axerunners/axe/tags), usually the most recent released
+[git-tagged axe version](https://github.com/axerunners/axe/tags), usually the most recent released
 version.  
 
 ## Provision a virtual machine
@@ -583,11 +583,11 @@ Signatures can be verified by running `gitian-build.sh --verify`, but set `build
 After the build successfully completes, the gitian command `gsign` will be called, which will
 generate signatures, and a commit will be added.
 
-Fork the [zcash/gitian.sigs](https://github.com/zcash/gitian.sigs) repository by following the link
+Fork the [axerunners/gitian.sigs](https://github.com/axerunners/gitian.sigs) repository by following the link
 and clicking "fork".
 
 Now you can cd into the gitian.sigs directory, set the repository to point to your fork of
-[zcash/gitian.sigs](https://github.com/zcash/gitian.sigs), push
+[axerunners/gitian.sigs](https://github.com/axerunners/gitian.sigs), push
 your updates to a branch, and then make a pull request on github.
 
 ```
@@ -602,7 +602,7 @@ git push origin v2.0.6
 Working with GPG
 ----------------
 
-We provide two options for automatically importing keys into the VM, or you may choose to copy them manually. GPG keys are needed to sign the manifests which get pushed to [gitian.sigs](https://github.com/zcash/gitian.sigs).
+We provide two options for automatically importing keys into the VM, or you may choose to copy them manually. GPG keys are needed to sign the manifests which get pushed to [gitian.sigs](https://github.com/axerunners/gitian.sigs).
 
 GPG is tricky, especially if you use a smartcard and can't copy the secret key. We have a script intended to forward the gpg-agent socket into the VM, `forward_gpg_agent.sh`, but it is not currently working. If you want your full keyring to be available, you can use the following workaround involving `sshfs` and synced folders:
 
