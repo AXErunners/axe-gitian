@@ -43,6 +43,9 @@ above!
 - [direnv](https://direnv.net/) (Optional/Recommended)
 
 
+Download Apple SDK
+------------------
+[Apple SDK](https://github.com/AXErunners/axe/blob/master/doc/README_osx.md) required for macOS builds. Place this tarball (`MacOSX10.11.sdk.tar.gz`) into _axe-gitian_ folder and _Ansible_ will copy it during the run.
 
 Configuration
 -------------
