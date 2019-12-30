@@ -494,7 +494,7 @@ From the project root directory, run:
 axe-gitian$ vagrant up axe-build
 ```
 
-This will provision a Gitian host virtual machine that uses a Linux container (LXC) guest to perform
+This will provision a Gitian host virtual machine that uses a Linux container (LXC/Docker) guest to perform
 the actual builds.
 
 
