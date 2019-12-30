@@ -569,12 +569,14 @@ Once in a shell session in the VM, we're ready to run the gitian build.
 
 ```
 # on the virtualbox vm
-vagrant@axe-build:~$ ./gitian-build.py
+# replace $SIGNER and $VERSION with your key and target version/branch/commit
+vagrant@axe-build:~$ ./gitian-build.py --setup $SIGNER $VERSION
+vagrant@axe-build:~$ ./gitian-build.py -b $SIGNER $VERSION # will start the build with unsigned output.
 ```
 
 The output from `gbuild` is informative. There are some common warnings which can be ignored, e.g. if you get an intermittent privileges error related to LXC then just execute the script again. The most important thing is that one reaches the step which says `Running build script (log in var/build.log)`. If not, then something else is wrong and you should let us know.
 
-Take a look at the variables near the top of `~/gitian-build.py` and get familiar with its functioning, as it can handle most tasks.
+Take a look at the variables of `~/gitian-build.py` and get familiar with its functioning, as it can handle most tasks.
 
 It's also a good idea to regularly `git pull` on this repository to obtain updates and re-run the entire VM provisioning for each release, to ensure current and consistent state for your builder.
 
