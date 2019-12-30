@@ -197,6 +197,13 @@
   tags: gpg
   when: gpg_key_id is defined and gpg_key_id != ''
 
+- name: Prepare input directory for Apple SDK
+  file:
+    path: "gitian-builder/inputs"
+    state: directory
+    recurse: yes
+    owner: vagrant
+
 - name: Copy Apple SDK
   copy:
     src: MacOSX10.11.sdk.tar.gz
