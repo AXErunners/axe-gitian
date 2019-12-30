@@ -1,11 +1,11 @@
 ---
-axe_swapfile_size: 2G
+axe_swapfile_size: 1G
 axe_vm_swappiness: 1
 axe_common_packages:
   - apt-show-versions
   - apt-transport-https
   - curl
-  - git
+  - git-core
   - haveged
   - htop
   - ntp
