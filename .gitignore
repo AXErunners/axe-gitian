@@ -1,5 +1,11 @@
-.vagrant/
-*.logs
+.env
+.envrc
+.vagrant/*
+*.swp
+gitian.sigs/*
+local/*
+!local/README.md
+axecore-binaries/*
 *.log
-*.tar.gz
 .DS_Store
+*.sdk.tar.gz

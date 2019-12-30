@@ -22,12 +22,9 @@ if [ -d "$HOME/bin" ] ; then
 fi
 
 export DISTRO=ubuntu
-export SUITE=bionic
 export ARCH=amd64
 export USE_LXC=1
-export LXC_BRIDGE=br0
+export LXC_BRIDGE=lxcbr0
 export GITIAN_HOST_IP={{ gitian_host_ip }}
 export LXC_GUEST_IP={{ lxc_guest_ip }}
 export MIRROR_HOST={{ gitian_host_ip }}
-export GPG_TTY="$(tty)"
-alias gpg='gpg2'

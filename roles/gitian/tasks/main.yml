@@ -17,28 +17,18 @@
       - bridge-utils
       - curl
       - debootstrap
-      - git
+      - git-core
       - gnupg2
       - kpartx
       - lintian
+      - lxc
       - make
-      - parted
       - python-cheetah
       - qemu-utils
       - ruby
       - sudo
     state: present
     update_cache: yes
-
-
-- name: Create Bionic link
-  file:
-    src: /usr/share/debootstrap/scripts/gutsy
-    dest: /usr/share/debootstrap/scripts/bionic
-    state: link
-  with_items:
-    - new
-    - vmdev
 
 - name: Set up the Gitian build user with sudo.
   user:
@@ -121,11 +111,11 @@
   git:
     repo: "{{ gitian_builder_url }}"
     dest: "/home/{{ gitian_user }}/gitian-builder"
-    version: "master"
+    version: "{{ gitian_builder_version }}"
     force: yes
   become_user: "{{ gitian_user }}"
 
-- include: keys.yml
+- include_tasks: keys.yml
   tags: keys
 
 - name: Clone git repository for AXE.
@@ -166,15 +156,29 @@
 
 - name: Wait extra time for VM to come back up.
   pause:
-    seconds: 120
+    seconds: 10
 
 - name: Set Git username.
-  command: "git config --global user.name '{{ git_name }}'"
+  command: "git config --global user.name \"{{ git_name }}\""
   become_user: "{{ gitian_user }}"
 
 - name: Set Git email address.
   command: "git config --global user.email '{{ git_email }}'"
   become_user: "{{ gitian_user }}"
+
+- name: Create bin directory under gitian_user home directory
+  file:
+    state: directory
+    dest: "/home/{{ gitian_user }}/bin"
+    mode: "0755"
+
+- name: Copy explode_yaml_file.py
+  copy:
+    src: explode_yaml_file.py
+    dest: "/home/{{ gitian_user }}/bin/explode_yaml_file.py"
+    owner: "{{ gitian_user }}"
+    group: "{{ gitian_user }}"
+    mode: "0755"
 
 - name: Copy Gitian build script.
   template:
@@ -185,10 +189,13 @@
     mode: "0755"
   tags: script
 
-- name: Check for presence of Gitian LXC image.
-  stat:
-    path: "/home/{{ gitian_user }}/gitian-builder/base-bionic-amd64"
-  register: gitian_lxc_image
+- name: Clean the apt cache to free up space.
+  apt:
+    autoclean: yes
+
+- include_tasks: gpg.yml
+  tags: gpg
+  when: gpg_key_id is defined and gpg_key_id != ''
 
 - name: Ensure group "docker" exists
   group:
@@ -202,22 +209,8 @@
   become_user: vagrant
   become_method: sudo
 
-- name: Clean the apt cache to free up space.
-  command: apt-get autoclean
-  register: autoclean_result
-  changed_when: "'Del' in autoclean_result.stdout"
-
-- include: gpg.yml
-  tags: gpg
-  become: no
-  when: gpg_key_id is defined and gpg_key_id != ''
-
-- include: ssh.yml
-  tags: ssh
-  become: no
-  when: ssh_key_name is defined and ssh_key_name != ''
-
-- file:
+- name: Prepare input directory for Apple SDK
+  file:
     path: "gitian-builder/inputs"
     state: directory
     recurse: yes
