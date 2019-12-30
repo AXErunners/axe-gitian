@@ -197,6 +197,18 @@
   tags: gpg
   when: gpg_key_id is defined and gpg_key_id != ''
 
+- name: Ensure group "docker" exists
+  group:
+    name: docker
+    state: present
+    system: yes
+
+- name: Execute Docker without sudo
+  shell: sh -c "sudo usermod -aG docker vagrant"
+  become: yes
+  become_user: vagrant
+  become_method: sudo
+
 - name: Prepare input directory for Apple SDK
   file:
     path: "gitian-builder/inputs"
