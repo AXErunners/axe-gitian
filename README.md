@@ -562,7 +562,7 @@ Hi harrypotter! You've successfully authenticated, but GitHub does not provide s
 ```
 
 
-Building Zcash
+Building AXE
 --------------
 
 Once in a shell session in the VM, we're ready to run the gitian build.
@@ -581,7 +581,7 @@ It's also a good idea to regularly `git pull` on this repository to obtain updat
 Generating and uploading signatures
 -----------------------------------
 
-Signatures can be verified by running `gitian-build.py --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports Zcash developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the Zcash source repository.
+Signatures can be verified by running `gitian-build.py --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports Axe developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the Zcash source repository.
 
 After the build successfully completes, the gitian command `gsign` will be called, which will
 generate signatures, and a commit will be added.
