@@ -384,13 +384,14 @@ environment active when using a shell at (or below) that location.
 
 ## Upgrade pip
 
-`pip` has a command to upgrade itself. Let's go ahead and run that:
+`pip3` has a command to upgrade itself. Let's go ahead and run that:
 
 ```
-axe-gitian$ pip install --upgrade pip
+axe-gitian % pip3 install --upgrade pip
 Collecting pip
 [...]
-Successfully installed pip-19.3.1
+      Successfully uninstalled pip-19.3.1
+Successfully installed pip-20.0.1
 ```
 
 
@@ -399,19 +400,19 @@ Successfully installed pip-19.3.1
 
 We have some dependencies to install as python packages, using the pip package manager installed
 above. The set we need, with version numbers managed via git, is in `requirements-pip.lock`; we can
-run `pip install` with that file as input:
+run `pip3 install` with that file as input:
 
 ```
-axe-gitian$ pip install --requirement requirements-pip.lock
+axe-gitian$ pip3 install --requirement requirements-pip.lock
 ```
 
 Check that you can run `ansible` from the command line:
 
 ```
-axe-gitian$ ansible --version
-ansible 2.9.2
+axe-gitian % ansible --version
+ansible 2.9.4
 [...]
-axe-gitian$
+axe-gitian %
 ```
 
 
