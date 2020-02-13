@@ -11,7 +11,7 @@ axe_version: master
 gitian_host_ip: 10.0.2.15
 lxc_guest_ip: 10.0.3.5
 axe_developer_pubkeys:
-  - name: charlie137
+  - name: charlesrocket
     id: 0A0E29B7
   - name: ddude1
     id: B306325A
