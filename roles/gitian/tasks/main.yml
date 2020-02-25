@@ -15,6 +15,7 @@
     name:
       - apt-cacher-ng
       - bridge-utils
+      - ca-certificates
       - curl
       - debootstrap
       - git-core
@@ -27,6 +28,17 @@
       - qemu-utils
       - ruby
       - sudo
+    state: present
+    update_cache: yes
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/debian stretch stable
     state: present
     update_cache: yes
 

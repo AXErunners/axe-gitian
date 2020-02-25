@@ -7,9 +7,9 @@ galaxy_info:
   license: GPLv2
   min_ansible_version: 2.1.2
   platforms:
-    - name: Ubuntu
+    - name: Debian
       versions:
-      - bionic
+      - jessie
   categories:
     - system
 dependencies: []
