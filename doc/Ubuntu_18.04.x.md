@@ -83,6 +83,15 @@ website includes instructions for enabling each of the shells it supports.
 
 
 
+## Headless notes
+
+Server instances should force GPG client to use TTY by adding following line in `~/.bashrc`:
+
+```
+export GPG_TTY=$(tty)
+```
+
+
 
 ## Versions
 
