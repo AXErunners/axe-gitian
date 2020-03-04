@@ -12,7 +12,7 @@ gitian_host_ip: 10.0.2.15
 lxc_guest_ip: 10.0.3.5
 axe_developer_pubkeys:
   - name: charlesrocket
-    id: 0A0E29B7
+    id: 5AC27140
   - name: ddude1
     id: B306325A
   - name: sparkuss
