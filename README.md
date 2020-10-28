@@ -390,8 +390,8 @@ environment active when using a shell at (or below) that location.
 axe-gitian % pip3 install --upgrade pip
 Collecting pip
 [...]
-      Successfully uninstalled pip-20.0.1
-Successfully installed pip-20.0.2
+      Successfully uninstalled pip-20.1.1
+Successfully installed pip-20.2.4
 ```
 
 
@@ -410,7 +410,7 @@ Check that you can run `ansible` from the command line:
 
 ```
 axe-gitian % ansible --version
-ansible 2.9.4
+ansible 2.10.2
 [...]
 axe-gitian %
 ```
