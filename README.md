@@ -390,8 +390,8 @@ environment active when using a shell at (or below) that location.
 axe-gitian % pip3 install --upgrade pip
 Collecting pip
 [...]
-      Successfully uninstalled pip-20.0.1
-Successfully installed pip-20.0.2
+      Successfully uninstalled pip-20.1.1
+Successfully installed pip-20.2.4
 ```
 
 
@@ -410,7 +410,7 @@ Check that you can run `ansible` from the command line:
 
 ```
 axe-gitian % ansible --version
-ansible 2.9.4
+ansible 2.10.2
 [...]
 axe-gitian %
 ```
@@ -465,6 +465,7 @@ or 16 characters. You should be able to use the truncated value.
 directory for your signatures in our `gitian.sigs` repository. We suggest using the username portion
 of the email address associated with your GPG key. In our example this is `hpotter`.
 
+For more info about updating or revoking gpg keys, see [Notes on updating or revoking GPG keys](docs/gpg_keys.md)
 
 
 ## Install Vagrant plugins
